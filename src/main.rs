@@ -6,14 +6,14 @@ mod watchdog;
 
 use std::process::Command;
 
+use windows::Win32::System::Threading::GetCurrentThreadId;
 use windows::Win32::UI::Input::KeyboardAndMouse::UnregisterHotKey;
 use windows::Win32::UI::WindowsAndMessaging::{GetMessageW, MSG, WM_HOTKEY};
-use windows::Win32::System::Threading::GetCurrentThreadId;
 
 use crate::config::load_config;
-use crate::utils::register_from_config;
-use crate::watchdog::{spawn_config_watcher, WM_CONFIG_CHANGED};
 use crate::constants::HK_ID;
+use crate::utils::register_from_config;
+use crate::watchdog::{WM_CONFIG_CHANGED, spawn_config_watcher};
 
 fn main() -> windows::core::Result<()> {
     let mut config = load_config();
@@ -32,9 +32,7 @@ fn main() -> windows::core::Result<()> {
 
             match msg.message {
                 WM_HOTKEY => {
-                    let _ = Command::new(&config.command)
-                        .args(&config.args)
-                        .spawn();
+                    let _ = Command::new(&config.command).args(&config.args).spawn();
                 }
                 WM_CONFIG_CHANGED => {
                     println!("config.toml cambió, recargando...");

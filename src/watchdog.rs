@@ -1,6 +1,6 @@
 use std::fs;
-use std::time::{Duration, SystemTime};
 use std::thread;
+use std::time::{Duration, SystemTime};
 
 use windows::Win32::Foundation::{LPARAM, WPARAM};
 use windows::Win32::UI::WindowsAndMessaging::{PostThreadMessageW, WM_APP};
@@ -12,9 +12,8 @@ pub const WM_CONFIG_CHANGED: u32 = WM_APP + 1;
 pub fn spawn_config_watcher(main_thread_id: u32) {
     thread::spawn(move || {
         let path = config_path();
-        let mut last_modified: Option<SystemTime> = fs::metadata(&path)
-            .and_then(|m| m.modified())
-            .ok();
+        let mut last_modified: Option<SystemTime> =
+            fs::metadata(&path).and_then(|m| m.modified()).ok();
 
         loop {
             thread::sleep(Duration::from_millis(500));
@@ -27,7 +26,8 @@ pub fn spawn_config_watcher(main_thread_id: u32) {
             if Some(current_modified) != last_modified {
                 last_modified = Some(current_modified);
                 unsafe {
-                    let _ = PostThreadMessageW(main_thread_id, WM_CONFIG_CHANGED, WPARAM(0), LPARAM(0));
+                    let _ =
+                        PostThreadMessageW(main_thread_id, WM_CONFIG_CHANGED, WPARAM(0), LPARAM(0));
                 }
             }
         }
