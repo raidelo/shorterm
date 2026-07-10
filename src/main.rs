@@ -1,15 +1,19 @@
 mod config;
 mod parsing;
+mod utils;
 
 use std::process::Command;
 
-use windows::Win32::UI::Input::KeyboardAndMouse::{RegisterHotKey, VK_F9, HOT_KEY_MODIFIERS};
 use windows::Win32::UI::WindowsAndMessaging::{GetMessageW, MSG, WM_HOTKEY};
 
-fn main() -> windows::core::Result<()> {
-    unsafe {
-        RegisterHotKey(None, 1, HOT_KEY_MODIFIERS(0), VK_F9.0 as u32)?;
+use crate::config::load_config;
+use crate::utils::register_from_config;
 
+fn main() -> windows::core::Result<()> {
+    let config = load_config();
+    register_from_config(&config)?;
+
+    unsafe {
         let mut msg = MSG::default();
         loop {
             let ok = GetMessageW(&mut msg, None, 0, 0);

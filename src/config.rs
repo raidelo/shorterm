@@ -5,9 +5,9 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone, PartialEq)]
 pub struct Config {
-    key: String,
+    pub key: String,
     #[serde(default)]
-    modifier: Vec<String>,
+    pub modifier: Vec<String>,
 }
 
 pub fn config_path() -> PathBuf {
