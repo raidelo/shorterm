@@ -32,8 +32,8 @@ fn main() -> windows::core::Result<()> {
 
             match msg.message {
                 WM_HOTKEY => {
-                    let _ = Command::new(r"C:\Program Files\WezTerm\wezterm-gui.exe")
-                        .args(["start"])
+                    let _ = Command::new(&config.command)
+                        .args(&config.args)
                         .spawn();
                 }
                 WM_CONFIG_CHANGED => {

@@ -8,6 +8,8 @@ pub struct Config {
     pub key: String,
     #[serde(default)]
     pub modifier: Vec<String>,
+    pub command: String,
+    pub args: Vec<String>,
 }
 
 pub fn config_path() -> PathBuf {
@@ -18,20 +20,11 @@ pub fn config_path() -> PathBuf {
         .join("config.toml")
 }
 
-fn default_config_toml() -> &'static str {
-    r#"key = "F9"
-modifier = []
-"#
-}
-
 pub fn load_config() -> Config {
     let path = config_path();
 
     if !path.exists() {
-        if let Some(parent) = path.parent() {
-            fs::create_dir_all(parent).expect("no se pudo crear .config/shorterm");
-        }
-        fs::write(&path, default_config_toml()).expect("no se pudo escribir config.toml");
+        panic!("el archivo de configuracion en `$HOME/.config/shorterm/config.toml` no existe");
     }
 
     let contents = fs::read_to_string(&path).expect("no se pudo leer config.toml");
