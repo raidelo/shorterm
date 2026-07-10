@@ -1,3 +1,5 @@
+mod config;
+
 use std::process::Command;
 
 use windows::Win32::UI::Input::KeyboardAndMouse::{RegisterHotKey, VK_F9, HOT_KEY_MODIFIERS};
